@@ -3,14 +3,13 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ADSENSE_ACCOUNT, GA_MEASUREMENT_ID } from "@/lib/config";
+import { SITE_URL } from "@/lib/site-url";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://moonbow-window.vercel.app";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: { default: "Cumberland Falls Moonbow Tonight | Live Decision", template: "%s | Cumberland Falls Moonbow" },
   description: "A live, five-minute decision engine for Cumberland Falls moonbow viewing: score, best time, arrival, clouds, river flow, confidence and viewing location.",
   applicationName: "Cumberland Falls Moonbow Window",
