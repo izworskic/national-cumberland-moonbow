@@ -1,0 +1,27 @@
+{
+  "station": {
+    "id": "72424303849",
+    "name": "London Corbin Airport, KY US",
+    "latitude": 37.08958,
+    "longitude": -84.06881,
+    "distanceFromViewpointKm": 37.6
+  },
+  "source": "NOAA NCEI Local Climatological Data",
+  "period": "2015-2024",
+  "localNightHours": "19:00-06:59 LST",
+  "method": "FM-15 hourly reports; maximum reported sky-layer coverage; expected moonlight transmission exp(-3.2 * cloud_fraction^1.25)",
+  "months": [
+    { "month": 1, "expectedTransmission": 0.406, "clearFraction": 0.386, "blockedFraction": 0.597, "observations": 3709 },
+    { "month": 2, "expectedTransmission": 0.438, "clearFraction": 0.420, "blockedFraction": 0.562, "observations": 3386 },
+    { "month": 3, "expectedTransmission": 0.548, "clearFraction": 0.534, "blockedFraction": 0.438, "observations": 3706 },
+    { "month": 4, "expectedTransmission": 0.590, "clearFraction": 0.582, "blockedFraction": 0.381, "observations": 3583 },
+    { "month": 5, "expectedTransmission": 0.601, "clearFraction": 0.601, "blockedFraction": 0.357, "observations": 3699 },
+    { "month": 6, "expectedTransmission": 0.690, "clearFraction": 0.692, "blockedFraction": 0.255, "observations": 3554 },
+    { "month": 7, "expectedTransmission": 0.678, "clearFraction": 0.683, "blockedFraction": 0.265, "observations": 3702 },
+    { "month": 8, "expectedTransmission": 0.658, "clearFraction": 0.659, "blockedFraction": 0.290, "observations": 3706 },
+    { "month": 9, "expectedTransmission": 0.686, "clearFraction": 0.685, "blockedFraction": 0.279, "observations": 3580 },
+    { "month": 10, "expectedTransmission": 0.640, "clearFraction": 0.630, "blockedFraction": 0.342, "observations": 3633 },
+    { "month": 11, "expectedTransmission": 0.611, "clearFraction": 0.598, "blockedFraction": 0.382, "observations": 3566 },
+    { "month": 12, "expectedTransmission": 0.475, "clearFraction": 0.456, "blockedFraction": 0.518, "observations": 3679 }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "national-cumberland-moonbow",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "benchmark": "node --import tsx scripts/benchmark.ts",
+    "validate:astronomy": "node --import tsx scripts/validate-astronomy.ts",
+    "generate:flow-climatology": "node --import tsx scripts/generate-flow-climatology.ts",
+    "generate:cloud-climatology": "node --import tsx scripts/generate-cloud-climatology.ts"
+  },
+  "dependencies": {
+    "@izworskic/national-outdoor-core": "https://github.com/izworskic/national-outdoor-core/archive/refs/tags/v1.0.0.tar.gz",
+    "@neondatabase/serverless": "^1.0.2",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
+    "astronomy-engine": "2.1.19",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "h5wasm": "0.10.3",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "1.63.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "eslint": "^9.34.0",
+    "eslint-config-next": "16.3.4",
+    "jsdom": "^26.1.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "5.0.0"
+  }
+}

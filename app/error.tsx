@@ -1,0 +1,2 @@
+"use client";
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) { return <main className="content-page shell" id="main"><p className="content-page__eyebrow">Degraded safely</p><h1>The live decision could not load.</h1><p className="lede">No conditions have been fabricated. Try the calculation again, or use the official park schedule while live sources recover.</p><button className="error-button" onClick={() => reset()}>Try again</button></main>; }
