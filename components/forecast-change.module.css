@@ -1,0 +1,15 @@
+.card {
+  display: grid;
+  gap: .6rem;
+  margin: 1rem 0 0;
+  padding: .9rem 1rem;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: .9rem;
+  background: rgba(8,18,28,.68);
+}
+.card strong { font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; opacity: .78; }
+.card div { display: flex; align-items: baseline; gap: .55rem; flex-wrap: wrap; }
+.card span { font-size: 1.25rem; font-weight: 800; }
+.card b { opacity: .6; }
+.card em { margin-left: .2rem; font-style: normal; font-weight: 700; font-size: .85rem; }
+.card p { margin: 0; line-height: 1.5; opacity: .82; }

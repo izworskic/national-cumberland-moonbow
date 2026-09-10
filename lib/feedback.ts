@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { z } from "zod";
+import { MODEL_CONFIG } from "./config";
 import type { DecisionResult } from "./types";
 
 export const feedbackSchema = z.object({
@@ -66,8 +67,22 @@ export async function storeFeedback(input: z.infer<typeof feedbackSchema>, decis
   if (Number(recent[0]?.count ?? 0) >= 6) throw new Error("RATE_LIMIT");
   const now = new Date();
   const closest = decision.timeline.reduce((best, point) => Math.abs(new Date(point.timestamp).getTime() - now.getTime()) < Math.abs(new Date(best.timestamp).getTime() - now.getTime()) ? point : best, decision.timeline[0]);
+  const modelPoint = decision.weather.modelConsensus?.points.find((point) => now >= new Date(point.start) && now < new Date(point.end)) ?? null;
   const strength = input.outcome === "YES" ? 3 : input.outcome === "FAINTLY" ? 1 : 0;
   const visible = input.outcome !== "NO";
+  const modeledConditions = {
+    modelId: MODEL_CONFIG.id,
+    modelVersion: MODEL_CONFIG.version,
+    estimatedChance: decision.estimatedChance,
+    physicalScore: decision.score,
+    confidence: decision.confidence.score,
+    factors: closest.factors,
+    hardGates: closest.hardGates,
+    cloudInput: closest.cloudInput,
+    modelConsensus: modelPoint ? { cloudCover: modelPoint.cloudCover, spread: modelPoint.spread, modelCount: modelPoint.modelCount, models: modelPoint.models } : null,
+    mist: { dischargeCfs: decision.hydro.dischargeCfs, percentile: decision.hydro.percentile, label: decision.hydro.mistLabel },
+    sourceStates: Object.fromEntries(decision.sources.map((source) => [source.id, source.freshness])),
+  };
   await sql`INSERT INTO moonbow_outcomes (
     timestamp, target_date, viewpoint, moonbow_visible, visibility_strength,
     moon_illumination, moon_altitude, moon_azimuth, sun_altitude,
@@ -78,9 +93,9 @@ export async function storeFeedback(input: z.infer<typeof feedbackSchema>, decis
   ) VALUES (
     ${now.toISOString()}, ${input.targetDate}, ${decision.viewpoint.id}, ${visible}, ${strength},
     ${closest.astronomy.moonIllumination}, ${closest.astronomy.moonAltitude}, ${closest.astronomy.moonAzimuth}, ${closest.astronomy.sunAltitude},
-    ${decision.hydro.dischargeCfs}, ${decision.hydro.percentile}, ${closest.weather?.cloudCover ?? null}, ${decision.satellite.classification},
-    ${decision.weather.observation?.visibilityM ?? null}, ${closest.weather?.precipitationProbability ?? null}, ${closest.weather?.windSpeedMps ?? null}, ${closest.weather?.windDirection ?? null},
-    ${decision.score}, ${decision.confidence.score}, 'anonymous_web', ${hash}, ${JSON.stringify({ modelVersion: "1.0.0", factors: closest.factors, hardGates: closest.hardGates, sourceStates: Object.fromEntries(decision.sources.map((source) => [source.id, source.freshness])) })}::jsonb,
+    ${decision.hydro.dischargeCfs}, ${decision.hydro.percentile}, ${modelPoint?.cloudCover ?? closest.weather?.cloudCover ?? null}, ${decision.satellite.classification},
+    ${decision.weather.observation?.visibilityM ?? modelPoint?.visibilityM ?? null}, ${closest.weather?.precipitationProbability ?? null}, ${modelPoint?.windSpeedMps ?? closest.weather?.windSpeedMps ?? null}, ${modelPoint?.windDirection ?? closest.weather?.windDirection ?? null},
+    ${decision.score}, ${decision.confidence.score}, 'anonymous_web', ${hash}, ${JSON.stringify(modeledConditions)}::jsonb,
     'unverified', 0.25, ${browserFamily(userAgent)}
   )`;
 }

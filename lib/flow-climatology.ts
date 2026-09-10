@@ -40,9 +40,13 @@ export function estimatedPercentile(value: number, stats: DayStats): number {
 }
 
 export function mistFactor(dischargeCfs: number): number {
-  // A monotonic, saturating proxy: extra water helps progressively less. V1 does
-  // not assert a narrow optimum before sighting reports support one.
-  return clamp(0.18 + 0.82 * (1 - Math.exp(-Math.max(0, dischargeCfs) / 520)));
+  const flow = Math.max(0, dischargeCfs);
+  // Flow quickly improves spray production and then saturates. At exceptional
+  // flood flows, a small conservative penalty represents overspray/poor optical
+  // definition without pretending that a precise high-flow cutoff is known.
+  const production = 0.18 + 0.82 * (1 - Math.exp(-flow / 520));
+  const oversprayPenalty = flow <= 6_000 ? 1 : clamp(Math.exp(-(flow - 6_000) / 30_000), 0.72, 1);
+  return clamp(production * oversprayPenalty);
 }
 
 export function mistLabel(factor: number): "LOW MIST" | "ADEQUATE MIST" | "STRONG MIST" {
