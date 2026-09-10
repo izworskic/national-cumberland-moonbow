@@ -41,6 +41,10 @@ export const SOURCES = {
     label: "National Weather Service",
     url: "https://api.weather.gov/points/36.83885,-84.34435",
   },
+  openMeteo: {
+    label: "Open-Meteo model access",
+    url: "https://open-meteo.com/en/docs",
+  },
   climate: {
     label: "NOAA NCEI nighttime cloud history",
     url: "https://www.ncei.noaa.gov/data/local-climatological-data/",
@@ -68,9 +72,9 @@ export const SOURCES = {
 } as const;
 
 export const MODEL_CONFIG = {
-  version: "1.0.0",
+  id: "moonbow-model-v2",
+  version: "2.0.0",
   timestepMinutes: 5,
-  // 0.88 retains every published 2026 Kentucky Parks window; calibration remains score-only.
   lunarIlluminationGate: 0.88,
   maximumMoonAltitude: 42,
   darknessSunAltitude: -12,
@@ -78,12 +82,19 @@ export const MODEL_CONFIG = {
   geometrySoftWidthDegrees: 4.5,
   horizonClearanceDegrees: 0.35,
   weights: {
-    lunar: 0.2,
-    geometry: 0.25,
-    cloud: 0.25,
-    mist: 0.15,
-    atmosphere: 0.08,
-    wind: 0.07,
+    lunar: 0.18,
+    geometry: 0.24,
+    cloud: 0.24,
+    mist: 0.14,
+    mistPlacement: 0.08,
+    atmosphere: 0.07,
+    wind: 0.05,
+  },
+  modelWeights: {
+    HRRR: 0.4,
+    NBM: 0.3,
+    ECMWF: 0.15,
+    GFS: 0.15,
   },
   decision: {
     goScore: 80,

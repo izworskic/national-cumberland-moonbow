@@ -7,6 +7,7 @@ export type ConfidenceMode =
   | "CLIMATOLOGY / PLANNING";
 export type FreshnessState = "fresh" | "aging" | "stale" | "unavailable" | "not-applicable";
 export type DriveCommitment = "local" | "30m" | "1h" | "2h" | "3h";
+export type WeatherModelName = "HRRR" | "NBM" | "GFS" | "ECMWF";
 
 export interface SourceStamp {
   id: string;
@@ -34,13 +35,54 @@ export interface AstronomyPoint {
 
 export interface WeatherPoint {
   cloudCover: number | null;
+  cloudCoverLow?: number | null;
+  cloudCoverMid?: number | null;
+  cloudCoverHigh?: number | null;
   precipitationProbability: number | null;
   quantitativePrecipitationMm: number | null;
   relativeHumidity: number | null;
+  dewPointC?: number | null;
+  visibilityM?: number | null;
   windSpeedMps: number | null;
   windDirection: number | null;
+  windGustMps?: number | null;
   temperatureC: number | null;
   conditions: string[];
+}
+
+export interface ModelForecastValue {
+  model: WeatherModelName;
+  cloudCover: number | null;
+  cloudCoverLow: number | null;
+  cloudCoverMid: number | null;
+  cloudCoverHigh: number | null;
+  visibilityM: number | null;
+  windSpeedMps: number | null;
+  windDirection: number | null;
+  windGustMps: number | null;
+}
+
+export interface ModelConsensusPoint {
+  start: string;
+  end: string;
+  cloudCover: number | null;
+  cloudCoverLow: number | null;
+  cloudCoverMid: number | null;
+  cloudCoverHigh: number | null;
+  visibilityM: number | null;
+  windSpeedMps: number | null;
+  windDirection: number | null;
+  windGustMps: number | null;
+  spread: number | null;
+  modelCount: number;
+  models: ModelForecastValue[];
+}
+
+export interface ModelConsensusDataset {
+  available: boolean;
+  points: ModelConsensusPoint[];
+  sources: SourceStamp[];
+  errors: string[];
 }
 
 export interface ObservationSnapshot {
@@ -64,6 +106,7 @@ export interface WeatherDataset {
   dangerousAlerts: Array<{ event: string; headline: string; onset: string | null; ends: string | null; url: string }>;
   sources: SourceStamp[];
   errors: string[];
+  modelConsensus?: ModelConsensusDataset;
 }
 
 export interface HydroSnapshot {
@@ -97,6 +140,7 @@ export interface FactorSet {
   geometry: number;
   cloud: number;
   mist: number;
+  mistPlacement: number;
   atmosphere: number;
   wind: number;
 }
@@ -110,6 +154,8 @@ export interface TimelinePoint {
   weather: WeatherPoint | null;
   cloudInput: {
     forecast: number | null;
+    multiModel: number | null;
+    modelSpread: number | null;
     observed: number | null;
     satellite: number | null;
     fused: number | null;
@@ -143,6 +189,8 @@ export interface DecisionResult {
   decisionReason: string;
   score: number;
   scoreLabel: "Moonbow Score";
+  estimatedChance: number | null;
+  chanceLabel: "Estimated Moonbow Chance";
   confidence: ConfidenceResult;
   driveCommitment: DriveCommitment;
   bestWindow: ViewingWindow | null;
