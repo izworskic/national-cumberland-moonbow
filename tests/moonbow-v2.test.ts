@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { estimatedMoonbowChance, evaluateDecision } from "@/lib/engine";
-import { mistPlacementFactor, scoreTimestep } from "@/lib/scoring";
+import { scoreTimestep } from "@/lib/scoring";
 import { buildFiveMinuteTimeline } from "@/lib/time";
 import type { ModelConsensusDataset, WeatherDataset } from "@/lib/types";
 import { makeInputs, makeSatellite, makeWeather, TARGET_DATE } from "./helpers";
@@ -55,12 +55,14 @@ describe("moonbow live v2 evidence model", () => {
   it("wind direction changes mist placement but never overrides physical gates", () => {
     const viable = buildFiveMinuteTimeline(TARGET_DATE).find((time) => scoreTimestep(time, makeInputs()).viable)!;
     const favorableWeather = makeWeather();
+    favorableWeather.observation = null;
     favorableWeather.points.forEach((point) => { point.value.windDirection = 256.5; point.value.windSpeedMps = 3; });
     const adverseWeather = makeWeather();
+    adverseWeather.observation = null;
     adverseWeather.points.forEach((point) => { point.value.windDirection = 76.5; point.value.windSpeedMps = 3; });
-    const favorableInputs = makeInputs({ weather: favorableWeather });
-    const adverseInputs = makeInputs({ weather: adverseWeather });
-    expect(mistPlacementFactor(viable, favorableWeather.points[0].value, favorableInputs)).toBeGreaterThan(mistPlacementFactor(viable, adverseWeather.points[0].value, adverseInputs));
-    expect(scoreTimestep(viable, favorableInputs).score).toBeGreaterThan(scoreTimestep(viable, adverseInputs).score);
+    const favorable = scoreTimestep(viable, makeInputs({ weather: favorableWeather }));
+    const adverse = scoreTimestep(viable, makeInputs({ weather: adverseWeather }));
+    expect(favorable.factors.mistPlacement).toBeGreaterThan(adverse.factors.mistPlacement);
+    expect(favorable.score).toBeGreaterThan(adverse.score);
   });
 });

@@ -10,7 +10,7 @@ import { OFFICIAL_WINDOWS_2026 } from "../lib/schedule-2026";
 import { buildFiveMinuteTimeline } from "../lib/time";
 
 const read = (path: string) => readFile(path, "utf8");
-const [scenarioTests, v2Tests, mobileTests, accessibilityTests, scoringSource, usgsSource, nwsSource, goesSource, openMeteoSource, heroSource, geometrySource, dashboardSource, feedbackSource, apiSource, pageSource, sitemapSource] = await Promise.all([
+const [scenarioTests, v2Tests, mobileTests, accessibilityTests, scoringSource, usgsSource, nwsSource, goesSource, openMeteoSource, heroSource, geometrySource, forecastChangeSource, dashboardSource, feedbackSource, apiSource, pageSource, sitemapSource] = await Promise.all([
   read("tests/decision-scenarios.test.ts"),
   read("tests/moonbow-v2.test.ts"),
   read("tests/e2e/mobile.spec.ts"),
@@ -22,6 +22,7 @@ const [scenarioTests, v2Tests, mobileTests, accessibilityTests, scoringSource, u
   read("lib/adapters/open-meteo.ts"),
   read("components/decision-hero.tsx"),
   read("components/geometry-visual.tsx"),
+  read("components/forecast-change.tsx"),
   read("components/dashboard.tsx"),
   read("lib/feedback.ts"),
   read("app/api/moonbow/route.ts"),
@@ -71,7 +72,7 @@ const chanceIntegrity = heroSource.includes("Estimated Moonbow Chance") && v2Tes
 const fourModels = ["ncep_hrrr_conus", "ncep_nbm_conus", "ecmwf_ifs", "ncep_gfs_seamless"].every((model) => openMeteoSource.includes(model));
 const structuredFailure = apiSource.includes("MOONBOW_ENGINE_UNAVAILABLE") && apiSource.includes("NextResponse.json");
 const visualPass = geometrySource.includes('type="range"') && geometrySource.includes("40–42°") && dashboardSource.includes("Tonight timeline");
-const repeatPass = feedbackSource.includes("submit") && dashboardSource.includes("Next moonbow windows") && dashboardSource.includes("Model consensus");
+const repeatPass = feedbackSource.includes("storeFeedback") && feedbackSource.includes("moonbow_outcomes") && forecastChangeSource.includes("localStorage") && forecastChangeSource.includes("Since your last check") && dashboardSource.includes("Next moonbow windows") && dashboardSource.includes("Model consensus");
 const mobilePass = mobileTests.includes("390px") && mobileTests.includes("Estimated Moonbow Chance") && accessibilityTests.includes("contrast");
 const discoveryPass = pageSource.includes("application/ld+json") && pageSource.includes("WebApplication") && sitemapSource.includes("september-2026");
 
@@ -81,9 +82,9 @@ const categories = [
   { name: "Real-time data reliability", max: 15, score: usgsSource.includes("api.waterdata.usgs.gov") && nwsSource.includes("api.weather.gov") && goesSource.includes("GOES-19") && fourModels && structuredFailure ? 14 : 0, evidence: "USGS + NWS + GOES + four-model consensus with isolated fallbacks; one point reserved for long-run provider SLO evidence" },
   { name: "Best-window accuracy", max: 10, score: overlap === OFFICIAL_WINDOWS_2026.length && medianCenterErrorMinutes <= 30 && MODEL_CONFIG.timestepMinutes === 5 ? 10 : 0, evidence: `${overlap}/${OFFICIAL_WINDOWS_2026.length} official windows overlap; median center error ${medianCenterErrorMinutes.toFixed(1)} min; ${startsWithinHour}/${OFFICIAL_WINDOWS_2026.length} starts within 60 min` },
   { name: "Visual explanation", max: 10, score: visualPass ? 10 : 0, evidence: "Five-minute timeline plus accessible time-scrubbable Moon/falls/mist geometry explorer" },
-  { name: "Repeat-visit value", max: 8, score: repeatPass ? 6 : 0, evidence: "Next windows, changing model consensus and visitor outcome collection; two points reserved for persisted forecast-change history" },
+  { name: "Repeat-visit value", max: 8, score: repeatPass ? 8 : 0, evidence: "Next windows, per-visitor forecast-change history, model consensus changes and outcome collection" },
   { name: "Mobile UX/accessibility", max: 7, score: mobilePass ? 7 : 0, evidence: "390px first-viewport release gate and WCAG automated coverage" },
-  { name: "SEO/performance", max: 5, score: discoveryPass ? 5 : 0, evidence: "Next production build runs before this benchmark; canonical/schema/sitemap routes are asserted in source" },
+  { name: "SEO/performance", max: 5, score: discoveryPass ? 5 : 0, evidence: "Production build precedes this benchmark; canonical/schema/sitemap routes are asserted in source" },
 ];
 
 const total = categories.reduce((sum, category) => sum + category.score, 0);

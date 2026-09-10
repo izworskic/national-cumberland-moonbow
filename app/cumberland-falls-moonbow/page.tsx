@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Dashboard } from "@/components/dashboard";
 import { DecisionControls } from "@/components/decision-controls";
 import { DecisionHero } from "@/components/decision-hero";
+import { ForecastChange } from "@/components/forecast-change";
 import { MoonbowGeometryVisual } from "@/components/geometry-visual";
 import { getLiveDecision } from "@/lib/engine";
 import { SITE_URL } from "@/lib/site-url";
@@ -24,5 +25,5 @@ export default async function MoonbowPage({ searchParams }: { searchParams: Prom
   const schema = {
     "@context": "https://schema.org", "@type": "WebApplication", name: "Cumberland Falls Moonbow Live", applicationCategory: "TravelApplication", operatingSystem: "Any", url: `${SITE_URL}/cumberland-falls-moonbow`, description: "Live decision support for Cumberland Falls moonbow viewing, including estimated chance, best window, Moon geometry, weather-model consensus and river mist conditions.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "TouristAttraction", name: "Cumberland Falls State Resort Park", geo: { "@type": "GeoCoordinates", latitude: result.viewpoint.latitude, longitude: result.viewpoint.longitude } }, dateModified: result.generatedAt,
   };
-  return <main id="main"><DecisionHero result={result} /><div className="controls-wrap shell"><DecisionControls date={date} drive={drive} /></div><div className="shell"><MoonbowGeometryVisual points={result.timeline} peakTimestamp={result.bestWindow?.peak ?? null} /></div><Dashboard result={result} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replaceAll("<", "\\u003c") }} /></main>;
+  return <main id="main"><DecisionHero result={result} /><div className="controls-wrap shell"><DecisionControls date={date} drive={drive} /><ForecastChange targetDate={result.targetDate} chance={result.estimatedChance} confidence={result.confidence.score} generatedAt={result.generatedAt} currentDriver={result.drivers[1]?.text ?? result.drivers[0]?.text ?? null} /></div><div className="shell"><MoonbowGeometryVisual points={result.timeline} peakTimestamp={result.bestWindow?.peak ?? null} /></div><Dashboard result={result} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replaceAll("<", "\\u003c") }} /></main>;
 }
