@@ -1,9 +1,10 @@
 .panel {
   margin: 2rem 0;
   padding: clamp(1rem, 3vw, 1.75rem);
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(22,52,59,.12);
   border-radius: 1.25rem;
-  background: rgba(8,18,28,.72);
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 16px 44px rgba(37,75,80,.08);
   overflow: hidden;
 }
 
@@ -20,28 +21,28 @@
   font-size: .78rem;
   letter-spacing: .12em;
   text-transform: uppercase;
-  opacity: .72;
+  color: #5b747a;
 }
 
-.heading h2 { margin: 0; }
-.heading strong { font-size: 1.25rem; white-space: nowrap; }
-.scene { width: 100%; height: auto; min-height: 190px; border-radius: .9rem; background: linear-gradient(180deg, rgba(12,24,45,.92), rgba(20,39,43,.9)); }
+.heading h2 { margin: 0; color: #16343b; }
+.heading strong { font-size: 1.25rem; white-space: nowrap; color: #66551f; }
+.scene { width: 100%; height: auto; min-height: 190px; border-radius: .9rem; background: linear-gradient(180deg, #d9e8ee, #dfeceb 55%, #c9dcda); color: #244c54; }
 .scene text { fill: currentColor; font-size: 14px; opacity: .82; }
-.ridge { fill: rgba(65,86,76,.75); }
-.falls { stroke: rgba(220,235,240,.92); stroke-width: 10; stroke-linecap: round; }
-.mist { fill: rgba(225,239,244,.26); stroke: rgba(225,239,244,.48); }
+.ridge { fill: rgba(82,111,98,.66); }
+.falls { stroke: rgba(247,252,252,.98); stroke-width: 10; stroke-linecap: round; }
+.mist { fill: rgba(246,252,252,.64); stroke: rgba(255,255,255,.88); }
 .observer { fill: currentColor; }
-.sight { stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 5 7; opacity: .45; }
-.moon { fill: rgba(255,248,215,.95); }
-.moonbeam { stroke: rgba(255,248,215,.95); stroke-width: 3; stroke-dasharray: 8 8; }
-.bow { fill: none; stroke: rgba(230,235,255,.9); stroke-width: 5; stroke-linecap: round; }
-.scrubber { display: grid; gap: .55rem; margin-top: 1rem; font-weight: 700; }
-.scrubber input { width: 100%; }
+.sight { stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 5 7; opacity: .38; }
+.moon { fill: #fff1bd; stroke: rgba(119,96,27,.18); stroke-width: 1; }
+.moonbeam { stroke: rgba(135,111,39,.76); stroke-width: 3; stroke-dasharray: 8 8; }
+.bow { fill: none; stroke: rgba(108,115,181,.76); stroke-width: 5; stroke-linecap: round; }
+.scrubber { display: grid; gap: .55rem; margin-top: 1rem; font-weight: 700; color: #36585e; }
+.scrubber input { width: 100%; accent-color: #2f7478; }
 .metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .65rem; margin-top: 1rem; }
-.metrics div { padding: .75rem; border-radius: .75rem; background: rgba(255,255,255,.055); }
-.metrics span { display: block; font-size: .72rem; opacity: .7; margin-bottom: .25rem; }
-.metrics strong { font-size: 1rem; }
-.note { margin: 1rem 0 0; font-size: .88rem; opacity: .72; line-height: 1.55; }
+.metrics div { padding: .75rem; border: 1px solid rgba(22,52,59,.08); border-radius: .75rem; background: rgba(232,241,240,.8); }
+.metrics span { display: block; font-size: .72rem; color: #5b747a; margin-bottom: .25rem; }
+.metrics strong { font-size: 1rem; color: #16343b; }
+.note { margin: 1rem 0 0; font-size: .88rem; color: #5b747a; line-height: 1.55; }
 
 @media (max-width: 700px) {
   .heading { align-items: start; }

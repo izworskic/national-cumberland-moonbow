@@ -7,6 +7,7 @@ import { SITE_URL } from "@/lib/site-url";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
+import "./visual-refresh.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   other: { "google-adsense-account": ADSENSE_ACCOUNT },
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#071315", colorScheme: "dark" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#f2f7f7", colorScheme: "light" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body>
