@@ -13,16 +13,22 @@ export function ForecastChange({ targetDate, chance, confidence, generatedAt, cu
   const [previous, setPrevious] = useState<Snapshot | null>(null);
   useEffect(() => {
     const key = `cumberland-moonbow:${targetDate}`;
+    let frame: number | null = null;
     try {
       const stored = window.localStorage.getItem(key);
       if (stored) {
         const parsed = JSON.parse(stored) as Snapshot;
-        if (parsed.generatedAt !== generatedAt) setPrevious(parsed);
+        if (parsed.generatedAt !== generatedAt) {
+          frame = window.requestAnimationFrame(() => setPrevious(parsed));
+        }
       }
       window.localStorage.setItem(key, JSON.stringify({ chance, confidence, generatedAt } satisfies Snapshot));
     } catch {
       // The decision tool remains fully functional when storage is blocked.
     }
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
   }, [targetDate, chance, confidence, generatedAt]);
   if (!previous) return null;
   if (chance === null || previous.chance === null) return <aside className={styles.card}><strong>Since your last check</strong><p>Date-specific weather is not available for both snapshots yet. The astronomy window is still deterministic.</p></aside>;
