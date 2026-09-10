@@ -3,13 +3,15 @@
   gap: .6rem;
   margin: 1rem 0 0;
   padding: .9rem 1rem;
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(22,52,59,.12);
   border-radius: .9rem;
-  background: rgba(8,18,28,.68);
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 10px 28px rgba(37,75,80,.07);
+  color: #16343b;
 }
-.card strong { font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; opacity: .78; }
+.card strong { font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; color: #5b747a; }
 .card div { display: flex; align-items: baseline; gap: .55rem; flex-wrap: wrap; }
-.card span { font-size: 1.25rem; font-weight: 800; }
-.card b { opacity: .6; }
-.card em { margin-left: .2rem; font-style: normal; font-weight: 700; font-size: .85rem; }
-.card p { margin: 0; line-height: 1.5; opacity: .82; }
+.card span { font-size: 1.25rem; font-weight: 800; color: #16343b; }
+.card b { color: #7b8e92; }
+.card em { margin-left: .2rem; font-style: normal; font-weight: 700; font-size: .85rem; color: #2f7478; }
+.card p { margin: 0; line-height: 1.5; color: #5b747a; }
