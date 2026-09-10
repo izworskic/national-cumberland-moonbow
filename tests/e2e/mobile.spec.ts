@@ -6,10 +6,10 @@ const PLANNING_URL = "/cumberland-falls-moonbow?date=2030-09-11";
 test("14. 390px first viewport contains the complete decision without horizontal scroll", async ({ page }) => {
   await page.goto(PLANNING_URL, { waitUntil: "domcontentloaded", timeout: 60_000 });
   await expect(page.locator(".decision-state")).toBeVisible();
-  await expect(page.getByText("Estimated Moonbow Chance")).toBeVisible();
-  await expect(page.getByText("Best window")).toBeVisible();
-  await expect(page.getByText("Arrive by")).toBeVisible();
-  await expect(page.getByText("Forecast confidence").first()).toBeVisible();
+  await expect(page.getByText("Estimated Moonbow Chance", { exact: true })).toBeVisible();
+  await expect(page.getByText("Best window", { exact: true })).toBeVisible();
+  await expect(page.getByText("Arrive by", { exact: true })).toBeVisible();
+  await expect(page.getByText("Forecast confidence", { exact: true }).first()).toBeVisible();
   const dimensions = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth, decisionBottom: document.querySelector(".decision-card")?.getBoundingClientRect().bottom ?? 9999, viewportHeight: window.innerHeight }));
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
   expect(dimensions.decisionBottom).toBeLessThanOrEqual(dimensions.viewportHeight + 1);
