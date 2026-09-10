@@ -10,17 +10,18 @@ import { OFFICIAL_WINDOWS_2026 } from "../lib/schedule-2026";
 import { buildFiveMinuteTimeline } from "../lib/time";
 
 const read = (path: string) => readFile(path, "utf8");
-const [scenarioTests, v2Tests, mobileTests, accessibilityTests, scoringSource, usgsSource, nwsSource, goesSource, openMeteoSource, heroSource, geometrySource, forecastChangeSource, dashboardSource, feedbackSource, apiSource, pageSource, sitemapSource] = await Promise.all([
+const [scenarioTests, v2Tests, mobileTests, accessibilityTests, playwrightConfig, typesSource, scoringSource, usgsSource, nwsSource, goesSource, openMeteoSource, geometrySource, forecastChangeSource, dashboardSource, feedbackSource, apiSource, pageSource, sitemapSource] = await Promise.all([
   read("tests/decision-scenarios.test.ts"),
   read("tests/moonbow-v2.test.ts"),
   read("tests/e2e/mobile.spec.ts"),
   read("tests/accessibility.test.ts"),
+  read("playwright.config.ts"),
+  read("lib/types.ts"),
   read("lib/scoring.ts"),
   read("lib/adapters/usgs.ts"),
   read("lib/adapters/nws.ts"),
   read("lib/adapters/goes.ts"),
   read("lib/adapters/open-meteo.ts"),
-  read("components/decision-hero.tsx"),
   read("components/geometry-visual.tsx"),
   read("components/forecast-change.tsx"),
   read("components/dashboard.tsx"),
@@ -66,14 +67,25 @@ const jplErrors = jpl.samples.map((sample) => {
 });
 const jplPass = jplErrors.every((error) => error.azimuth <= jpl.tolerances.azimuthDegrees && error.altitude <= jpl.tolerances.altitudeDegrees && error.illumination <= jpl.tolerances.illuminationFraction);
 const weightsSum = Object.values(MODEL_CONFIG.weights).reduce((sum, value) => sum + value, 0);
-const requiredScenarios = Array.from({ length: 13 }, (_, index) => scenarioTests.includes(`${index + 1}.`)).every(Boolean) && mobileTests.includes("14.");
+const requiredScenarios = Array.from({ length: 13 }, (_, index) => scenarioTests.includes(`${index + 1}.`)).every(Boolean) && mobileTests.includes('test("14.');
 const cloudObservationCount = cloud.months.reduce((sum, month) => sum + month.observations, 0);
-const chanceIntegrity = heroSource.includes("Estimated Moonbow Chance") && v2Tests.includes("coarse estimated chance") && v2Tests.includes("CLIMATOLOGY / PLANNING");
+
+// Verify executable/public contracts rather than fragile display implementation details.
+const chanceIntegrity =
+  typesSource.includes('chanceLabel: "Estimated Moonbow Chance"') &&
+  v2Tests.includes("estimatedMoonbowChance") &&
+  v2Tests.includes("CLIMATOLOGY / PLANNING") &&
+  mobileTests.includes('getByText("Estimated Moonbow Chance", { exact: true })');
 const fourModels = ["ncep_hrrr_conus", "ncep_nbm_conus", "ecmwf_ifs", "ncep_gfs_seamless"].every((model) => openMeteoSource.includes(model));
 const structuredFailure = apiSource.includes("MOONBOW_ENGINE_UNAVAILABLE") && apiSource.includes("NextResponse.json");
 const visualPass = geometrySource.includes('type="range"') && geometrySource.includes("40–42°") && dashboardSource.includes("Tonight timeline");
 const repeatPass = feedbackSource.includes("storeFeedback") && feedbackSource.includes("moonbow_outcomes") && forecastChangeSource.includes("localStorage") && forecastChangeSource.includes("Since your last check") && dashboardSource.includes("Next moonbow windows") && dashboardSource.includes("Model consensus");
-const mobilePass = mobileTests.includes("390px") && mobileTests.includes("Estimated Moonbow Chance") && accessibilityTests.includes("contrast");
+const mobilePass =
+  playwrightConfig.includes("width: 390") &&
+  mobileTests.includes("decisionBottom") &&
+  mobileTests.includes("clientWidth <= 420") &&
+  mobileTests.includes("AxeBuilder") &&
+  accessibilityTests.includes("contrast");
 const discoveryPass = pageSource.includes("application/ld+json") && pageSource.includes("WebApplication") && sitemapSource.includes("september-2026");
 
 const categories = [
