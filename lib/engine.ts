@@ -127,7 +127,7 @@ export function evaluateDecision(inputs: EngineInputs): DecisionResult {
     estimatedChance, chanceLabel: "Estimated Moonbow Chance",
     confidence, driveCommitment: inputs.driveCommitment, bestWindow: selected.window, arrivalTime,
     drivers: makeDrivers(inputs, selected.score, selected.window), timeline, astronomySummary: astronomySummary(inputs.targetDate), hydro: inputs.hydro, satellite: inputs.satellite, weather: inputs.weather, viewpoint: VIEWPOINT, sources,
-    notices: ["Estimated Moonbow Chance is a coarse model estimate, not an empirically calibrated success frequency.", "The Moonbow Score is the underlying physical opportunity index; forecast confidence is calculated separately.", ...(official ? ["This date is inside Kentucky State Parks’ approximate 2026 moonbow schedule."] : []), "The tree-line and mist-placement corrections remain conservative and will be refined with observer reports."],
+    notices: ["The public opportunity score is a physical index, not an empirically calibrated success frequency. The API’s legacy estimatedChance field is retained for compatibility.", "The Moonbow Score is the underlying physical opportunity index; forecast confidence is calculated separately.", ...(official ? ["This date is inside Kentucky State Parks’ approximate 2026 moonbow schedule."] : []), "The tree-line and mist-placement corrections remain conservative and will be refined with observer reports."],
   };
 }
 

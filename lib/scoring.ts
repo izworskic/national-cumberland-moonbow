@@ -135,7 +135,7 @@ export function scoreTimestep(time: Date, inputs: EngineInputs): TimelinePoint {
   if (cloudInput.fused !== null && cloudInput.fused >= 0.97) hardGates.push("Cloud cover blocks direct moonlight");
   if (inputs.weather.dangerousAlerts.length) hardGates.push(`Dangerous weather: ${inputs.weather.dangerousAlerts[0].event}`);
   const factors: FactorSet = {
-    lunar: clamp(((astronomy.moonIllumination - 0.82) / 0.18) ** 0.5),
+    lunar: Math.sqrt(clamp((astronomy.moonIllumination - 0.82) / 0.18)),
     geometry: astronomyResult.geometry,
     cloud: cloudTransmission(cloudInput.fused, planning, time.getUTCMonth()),
     mist: hydroFactor,
