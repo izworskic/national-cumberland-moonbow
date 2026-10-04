@@ -33,7 +33,7 @@ export function DecisionHero({ result }: { result: DecisionResult }) {
           <p className="data-live"><span className={freshest ? "pulse" : "pulse pulse--muted"} />{freshest ? `${freshest} live/model sources fresh` : liveDataNotNeeded ? "Live data not needed" : "Live sources limited"}</p>
         </div>
         <div className="decision-grid">
-          <div className="score-block"><span>{result.chanceLabel}</span><strong>{result.estimatedChance === null ? "—" : result.estimatedChance}</strong><small>{result.estimatedChance === null ? " weather not ready" : "%"}</small><p>Physical score {result.score}/100</p></div>
+          <div className="score-block"><span>Moonbow opportunity score</span><strong>{result.score}</strong><small>/100</small><p>{result.confidence.mode === "CLIMATOLOGY / PLANNING" ? "Seasonal planning signal" : "Physical opportunity index"} · not a sighting probability</p></div>
           <dl className="decision-facts">
             <div><dt>Best window</dt><dd>{result.bestWindow ? `${formatLocal(result.bestWindow.start)} – ${formatLocal(result.bestWindow.end)}` : "No viable window"}</dd></div>
             <div><dt>Arrive by</dt><dd>{result.arrivalTime ? formatLocal(result.arrivalTime) : result.estimatedChance === null ? "Check again closer to the date" : "Do not make the trip"}</dd></div>

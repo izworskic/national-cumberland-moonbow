@@ -41,6 +41,22 @@ describe("moonbow live v2 evidence model", () => {
     expect(estimatedMoonbowChance(result.score, { ...result.confidence, mode: "CLIMATOLOGY / PLANNING" }, result.bestWindow)).toBeNull();
   });
 
+  it("dark-moon nights keep every lunar factor finite and respect the illumination gate", () => {
+    const inputs = makeInputs({ targetDate: "2026-10-10" });
+    const points = buildFiveMinuteTimeline("2026-10-10").map(time => scoreTimestep(time, inputs));
+    expect(points.some(point => point.astronomy.moonIllumination < 0.82)).toBe(true);
+    for (const point of points) {
+      expect(Number.isFinite(point.factors.lunar)).toBe(true);
+      expect(point.factors.lunar).toBeGreaterThanOrEqual(0);
+      expect(point.factors.lunar).toBeLessThanOrEqual(1);
+      expect(Number.isFinite(point.score)).toBe(true);
+      if (point.astronomy.moonIllumination < 0.82) {
+        expect(point.factors.lunar).toBe(0);
+        expect(point.score).toBe(0);
+      }
+    }
+  });
+
   it("model disagreement lowers confidence without inventing certainty", () => {
     const agreeingWeather = makeWeather();
     agreeingWeather.modelConsensus = consensus(agreeingWeather, [5, 7, 6, 5], 0.01);

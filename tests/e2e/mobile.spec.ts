@@ -6,7 +6,7 @@ const PLANNING_URL = "/cumberland-falls-moonbow?date=2030-09-11";
 test("14. mobile first viewport contains the complete decision without horizontal scroll", async ({ page }) => {
   await page.goto(PLANNING_URL, { waitUntil: "domcontentloaded", timeout: 60_000 });
   await expect(page.locator(".decision-state")).toBeVisible();
-  await expect(page.getByText("Estimated Moonbow Chance", { exact: true })).toBeVisible();
+  await expect(page.getByText("Moonbow opportunity score", { exact: true })).toBeVisible();
   await expect(page.getByText("Best window", { exact: true })).toBeVisible();
   await expect(page.getByText("Arrive by", { exact: true })).toBeVisible();
   await expect(page.getByText("Forecast confidence", { exact: true }).first()).toBeVisible();
